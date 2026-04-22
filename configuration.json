@@ -1,0 +1,38 @@
+{
+  "target": "score",
+  "eliminar": ["ID"],
+  "impute_strategy": "MEAN",
+  "scaling": "MAXABS",
+  "sampling": "smote",
+  "metrics_average": "macro",
+  "text_process": "tf-idf",
+  "text_column": "text",
+  "tfidf_params": {
+    "max_features": 50000,
+    "ngram_min": 1,
+    "ngram_max": 3,
+    "min_df": 1,
+    "sublinear_tf": true
+  },
+  "knn_params": {
+    "k_min": 1,
+    "k_max": 7,
+    "p_min": 1,
+    "p_max": 2
+  },
+  "tree_params": {
+    "depths": [3, 5, 10, 15]
+  },
+  "rf_params": {
+    "n_estimators": [50, 100, 200]
+  },
+  "lr_params": {
+    "C_values": [0.5, 1.0, 2.0],
+    "solvers": ["lbfgs"],
+    "class_weights": [
+        {"0": 3, "1": 6, "2": 1},
+        {"0": 2, "1": 8, "2": 1},
+        {"0": 4, "1": 5, "2": 1}
+    ]
+}
+}
