@@ -2,3 +2,9 @@ pandas
 numpy
 scikit-learn
 imbalanced-learn
+spacy
+gensim
+nltk
+matplotlib
+seaborn
+tqdm

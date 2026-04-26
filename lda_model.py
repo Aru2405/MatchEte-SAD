@@ -1,0 +1,83 @@
+import pandas as pd
+from gensim.corpora import Dictionary
+from gensim.models import LdaModel, CoherenceModel
+
+# =========================
+# 1. PREPARACIÓN DE DATOS (OPCIÓN A)
+# =========================
+def prepare_data(df, text_col="text_final"):
+    # Aseguramos que no haya nulos y convertimos a string por seguridad
+    df = df.dropna(subset=[text_col])
+    
+    # Convertimos la cadena de texto "palabra1 palabra2" en una lista ['palabra1', 'palabra2']
+    # Esto es lo que Gensim necesita
+    tokens = df[text_col].apply(lambda x: str(x).split()).tolist()
+    
+    # Crear Diccionario
+    dictionary = Dictionary(tokens)
+    # Filtramos palabras muy raras o muy comunes
+    dictionary.filter_extremes(no_below=5, no_above=0.5)
+    
+    # Crear Corpus (Bag of Words)
+    corpus = [dictionary.doc2bow(t) for t in tokens]
+    
+    return tokens, dictionary, corpus
+
+# =========================
+# 2. LDA + COHERENCIA
+# =========================
+def run_lda_pipeline(tokens, dictionary, corpus, nombre_grupo):
+    print(f"\n--- Buscando el mejor número de temas para {nombre_grupo} ---")
+    best_k = 0
+    best_score = -1
+    best_model = None
+
+    # Probamos de 2 a 8 temas para ver cuál es más coherente
+    for k in range(2, 9):
+        lda = LdaModel(corpus=corpus, id2word=dictionary, num_topics=k, passes=10, random_state=42)
+        
+        coherence_model = CoherenceModel(
+            model=lda, 
+            texts=tokens, 
+            dictionary=dictionary, 
+            coherence='c_v'
+        )
+        score = coherence_model.get_coherence()
+        
+        print(f"Temas: {k} | Coherencia: {score:.4f}")
+        
+        if score > best_score:
+            best_score = score
+            best_k = k
+            best_model = lda
+
+    print(f"\n GANADOR para {nombre_grupo}: {best_k} temas (Coherencia: {best_score:.4f})")
+    
+    # Mostramos los temas del mejor modelo
+    print(f"\nInterpretación de Temas ({nombre_grupo}):")
+    for idx, topic in best_model.print_topics(-1):
+        print(f"  Tema {idx}: {topic}")
+    
+    return best_model
+
+# =========================
+# 3. EJECUCIÓN PRINCIPAL
+# =========================
+
+# --- PROCESAR POSITIVOS ---
+try:
+    print("\n" + "="*30 + "\n ANALIZANDO POSITIVOS \n" + "="*30)
+    df_pos = pd.read_csv("boo_positive.csv")
+    t_pos, d_pos, c_pos = prepare_data(df_pos)
+    model_pos = run_lda_pipeline(t_pos, d_pos, c_pos, "POSITIVOS")
+except FileNotFoundError:
+    print("Error: No se encuentra boo_positive.csv")
+
+# --- PROCESAR NEGATIVOS ---
+try:
+    print("\n" + "="*30 + "\n ANALIZANDO NEGATIVOS \n" + "="*30)
+    df_neg = pd.read_csv("boo_negative.csv")
+    t_neg, d_neg, c_neg = prepare_data(df_neg)
+    model_neg = run_lda_pipeline(t_neg, d_neg, c_neg, "NEGATIVOS")
+except FileNotFoundError:
+    print("Error: No se encuentra boo_negative.csv")

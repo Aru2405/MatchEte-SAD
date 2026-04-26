@@ -68,6 +68,8 @@ def preprocess_pipeline(path, text_column="content"):
 
     return df, dictionary
 
+
+
 # ==========================================
 # 4. EJECUCIÓN PRINCIPAL
 # ==========================================
@@ -75,17 +77,21 @@ if __name__ == "__main__":
     # 1. Ejecutar el proceso
     df_resultado, dictionary = preprocess_pipeline("Boo.csv")
 
-    # 2. Guardar el CSV limpio (solo original y resultado final)
-    df_resultado[["content", "text_final"]].to_csv("Boo_limpio.csv", index=False)
+    # 2. Guardar el CSV limpio (¡Añadimos 'score' aquí!)
+    # Asegúrate de que en tu archivo original 'Boo.csv' la columna se llame exactamente 'score'
+    columnas_finales = ["content", "text_final", "score"] 
     
-    # 3. Guardar el diccionario de Gensim (lo necesitarás para el LDA)
+    # Por si acaso la columna se llama diferente en el CSV original (ej: 'rating')
+    # puedes verificarlo con: print(df_resultado.columns)
+    
+    df_resultado[columnas_finales].to_csv("Boo_limpio.csv", index=False)
+    
+    # 3. Guardar el diccionario de Gensim
     dictionary.save("boo_gensim.dict")
 
-    print("\n" + "="*40)
-    print("¡PROCESO COMPLETADO!")
-    print(f"Diccionario creado con {len(dictionary)} palabras.")
     print(f"Archivo generado: Boo_limpio.csv")
-    print("="*40)
+    
+    
     
     # Ejemplo de control
     print(f"\nOriginal: {df_resultado['content'].iloc[0][:60]}...")
