@@ -1,3 +1,17 @@
-Clasifica el sentimiento de este texto: "It's good". Responde SOLO con una palabra: Positivo, Negativo o Neutro.
+Classify the sentiment of this text: 'It's good'. Respond ONLY with one word: Positive, Negative, or Neutral. --> Clasificacion Directa 
 
-Actúa como un analista de sentimientos de una empresa de apps. Analiza el siguiente comentario y clasifícalo estrictamente como Positivo, Negativo o Neutro. Responde con una sola palabra: It's good
+Act as a sentiment analyst for an app company. Analyze the following comment and classify it strictly as Positive, Negative, or Neutral. Respond with a single word: 'It's good'. --> Prompt de Rol
+
+Act as a sentiment analyst for an app company. Analyze the following comment and classify it strictly as Positive, Negative, or Neutral. Respond with a single word: 'It's literally same as any other dating app'. --> Prompt de Rol (Zero-Shot)
+
+Act as a sentiment analyst for an app company. 
+Example: 'I love this app' -> Positive.
+Analyze the following comment and classify it strictly as Positive, Negative, or Neutral. Respond with a single word: 'It's literally same as any other dating app'. --> Prompt de Rol (One-Shot)
+
+Act as a sentiment analyst for an app company.
+Examples:
+'I love this app' -> Positive
+'This app is terrible' -> Negative
+'It is just like the others' -> Neutral
+Analyze the following comment and classify it strictly as Positive, Negative, or Neutral. Respond with a single word: 'It's literally same as any other dating app'. --> Prompt de Rol (Few-Shot)
+
