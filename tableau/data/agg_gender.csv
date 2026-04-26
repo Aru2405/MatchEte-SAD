@@ -1,0 +1,13 @@
+app,gender,sentiment,n,pct_within_app_gender
+Boo,female,negative,51,4.55
+Boo,female,neutral,99,8.83
+Boo,female,positive,971,86.62
+Boo,male,negative,1023,11.53
+Boo,male,neutral,1282,14.44
+Boo,male,positive,6571,74.03
+Hinge,female,negative,1475,61.92
+Hinge,female,neutral,279,11.71
+Hinge,female,positive,628,26.36
+Hinge,male,negative,5915,77.78
+Hinge,male,neutral,597,7.85
+Hinge,male,positive,1093,14.37

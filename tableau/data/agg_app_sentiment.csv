@@ -1,0 +1,7 @@
+app,sentiment,n,pct_within_app
+Boo,negative,1074,10.74
+Boo,neutral,1381,13.81
+Boo,positive,7542,75.44
+Hinge,negative,7390,74.0
+Hinge,neutral,876,8.77
+Hinge,positive,1721,17.23

@@ -1,0 +1,7 @@
+app,sentiment,avg_words,avg_chars,n
+Boo,negative,20.2,107.9,1074
+Boo,neutral,11.3,57.6,1381
+Boo,positive,7.6,38.9,7542
+Hinge,negative,29.3,158.0,7390
+Hinge,neutral,29.4,157.3,876
+Hinge,positive,19.4,103.6,1721

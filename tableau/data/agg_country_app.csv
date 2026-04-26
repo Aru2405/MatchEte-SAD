@@ -1,0 +1,140 @@
+country,iso3,continent,app,n,avg_score,pct_negative,pct_positive
+Algeria,DZA,Africa,Boo,23,4.522,0.0,82.61
+Algeria,DZA,Africa,Hinge,62,1.952,74.19,17.74
+Argentina,ARG,Americas,Boo,96,3.969,14.58,70.83
+Argentina,ARG,Americas,Hinge,213,1.986,71.83,19.72
+Australia,AUS,Oceania,Boo,343,4.064,12.54,74.64
+Australia,AUS,Oceania,Hinge,825,1.908,73.82,16.85
+Austria,AUT,Europe,Boo,13,4.308,7.69,84.62
+Austria,AUT,Europe,Hinge,45,1.8,77.78,13.33
+Belgium,BEL,Europe,Boo,19,4.316,0.0,84.21
+Belgium,BEL,Europe,Hinge,50,1.62,84.0,14.0
+Bolivia,BOL,Americas,Boo,57,3.877,14.04,68.42
+Bolivia,BOL,Americas,Hinge,137,1.883,72.26,14.6
+Brazil,BRA,Americas,Boo,130,4.108,10.77,73.85
+Brazil,BRA,Americas,Hinge,335,1.86,75.82,15.82
+Canada,CAN,Americas,Boo,1486,4.118,10.57,75.64
+Canada,CAN,Americas,Hinge,597,1.896,75.71,16.25
+Chile,CHL,Americas,Boo,52,4.173,9.62,82.69
+Chile,CHL,Americas,Hinge,140,1.936,75.0,18.57
+China,CHN,Asia,Boo,96,4.198,9.38,78.12
+China,CHN,Asia,Hinge,203,1.966,73.89,19.21
+Colombia,COL,Americas,Boo,91,4.044,13.19,74.73
+Colombia,COL,Americas,Hinge,195,1.723,79.49,12.82
+Czech Republic,CZE,Europe,Boo,18,4.389,0.0,83.33
+Czech Republic,CZE,Europe,Hinge,39,1.564,84.62,10.26
+Denmark,DNK,Europe,Boo,28,4.214,17.86,82.14
+Denmark,DNK,Europe,Hinge,48,1.792,77.08,10.42
+Ecuador,ECU,Americas,Boo,56,4.089,10.71,76.79
+Ecuador,ECU,Americas,Hinge,142,1.951,75.35,18.31
+Egypt,EGY,Africa,Boo,55,4.145,9.09,78.18
+Egypt,EGY,Africa,Hinge,113,1.858,76.99,14.16
+England,GBR,Europe,Hinge,1,5.0,0.0,100.0
+Ethiopia,ETH,Africa,Boo,24,4.167,0.0,70.83
+Ethiopia,ETH,Africa,Hinge,50,1.82,80.0,16.0
+Fiji,FJI,Oceania,Boo,72,3.972,8.33,72.22
+Fiji,FJI,Oceania,Hinge,171,2.047,71.93,19.88
+Finland,FIN,Europe,Boo,15,3.867,13.33,66.67
+Finland,FIN,Europe,Hinge,38,1.763,84.21,13.16
+France,FRA,Europe,Boo,66,4.242,7.58,80.3
+France,FRA,Europe,Hinge,137,2.073,72.26,21.9
+Germany,DEU,Europe,Boo,78,4.09,12.82,76.92
+Germany,DEU,Europe,Hinge,173,2.035,71.68,20.23
+Ghana,GHA,Africa,Boo,46,4.152,10.87,80.43
+Ghana,GHA,Africa,Hinge,110,1.864,71.82,14.55
+Greece,GRC,Europe,Boo,26,4.462,3.85,88.46
+Greece,GRC,Europe,Hinge,51,2.098,68.63,21.57
+Hungary,HUN,Europe,Boo,19,3.737,21.05,63.16
+Hungary,HUN,Europe,Hinge,41,1.878,78.05,17.07
+India,IND,Asia,Boo,87,4.241,8.05,80.46
+India,IND,Asia,Hinge,179,1.855,75.42,13.97
+Indonesia,IDN,Asia,Boo,44,4.114,6.82,77.27
+Indonesia,IDN,Asia,Hinge,110,1.736,78.18,11.82
+Ireland,IRL,Europe,Boo,17,4.353,11.76,88.24
+Ireland,IRL,Europe,Hinge,41,2.0,70.73,17.07
+Israel,ISR,Asia,Boo,49,3.959,14.29,71.43
+Israel,ISR,Asia,Hinge,79,2.101,67.09,24.05
+Italy,ITA,Europe,Boo,40,3.95,12.5,72.5
+Italy,ITA,Europe,Hinge,86,1.733,79.07,11.63
+Japan,JPN,Asia,Boo,32,3.906,12.5,71.88
+Japan,JPN,Asia,Hinge,95,1.968,71.58,17.89
+Kenya,KEN,Africa,Boo,52,4.192,5.77,84.62
+Kenya,KEN,Africa,Hinge,130,2.046,70.0,18.46
+Libya,LBY,Africa,Boo,22,4.227,9.09,81.82
+Libya,LBY,Africa,Hinge,61,2.213,65.57,24.59
+Malaysia,MYS,Asia,Boo,16,4.625,0.0,93.75
+Malaysia,MYS,Asia,Hinge,45,1.711,84.44,11.11
+Mexico,MEX,Americas,Boo,1276,4.111,10.66,75.63
+Mexico,MEX,Americas,Hinge,469,1.955,72.28,17.06
+Morocco,MAR,Africa,Boo,90,4.178,10.0,70.0
+Morocco,MAR,Africa,Hinge,185,1.989,72.43,18.92
+Namibia,NAM,Africa,Boo,20,4.25,0.0,85.0
+Namibia,NAM,Africa,Hinge,57,2.105,71.93,21.05
+Nepal,NPL,Asia,Boo,20,4.4,10.0,90.0
+Nepal,NPL,Asia,Hinge,48,2.0,70.83,20.83
+Netherlands,NLD,Europe,Boo,18,4.5,0.0,88.89
+Netherlands,NLD,Europe,Hinge,42,1.81,73.81,9.52
+New Zealand,NZL,Oceania,Boo,206,4.117,10.19,74.76
+New Zealand,NZL,Oceania,Hinge,401,2.085,69.58,21.2
+Nigeria,NGA,Africa,Boo,38,3.974,18.42,76.32
+Nigeria,NGA,Africa,Hinge,126,2.119,69.84,22.22
+Norway,NOR,Europe,Boo,24,4.333,8.33,87.5
+Norway,NOR,Europe,Hinge,37,1.865,78.38,21.62
+Pakistan,PAK,Asia,Boo,44,3.955,15.91,75.0
+Pakistan,PAK,Asia,Hinge,95,2.032,68.42,20.0
+Papua New Guinea,PNG,Oceania,Boo,34,4.088,11.76,79.41
+Papua New Guinea,PNG,Oceania,Hinge,89,1.921,78.65,16.85
+Paraguay,PRY,Americas,Boo,46,3.978,13.04,69.57
+Paraguay,PRY,Americas,Hinge,55,2.309,63.64,25.45
+Peru,PER,Americas,Boo,67,4.254,7.46,80.6
+Peru,PER,Americas,Hinge,140,1.664,81.43,12.14
+Philippines,PHL,Asia,Boo,21,4.571,0.0,85.71
+Philippines,PHL,Asia,Hinge,39,2.0,71.79,17.95
+Poland,POL,Europe,Boo,28,4.179,14.29,75.0
+Poland,POL,Europe,Hinge,89,1.831,77.53,10.11
+Portugal,PRT,Europe,Boo,27,4.185,14.81,77.78
+Portugal,PRT,Europe,Hinge,57,1.754,77.19,12.28
+Qatar,QAT,Asia,Boo,26,3.962,7.69,65.38
+Qatar,QAT,Asia,Hinge,33,2.303,60.61,24.24
+Saudi Arabia,SAU,Asia,Boo,48,3.917,14.58,72.92
+Saudi Arabia,SAU,Asia,Hinge,95,1.705,80.0,13.68
+Senegal,SEN,Africa,Boo,20,4.6,0.0,95.0
+Senegal,SEN,Africa,Hinge,65,1.8,78.46,13.85
+Singapore,SGP,Asia,Boo,26,3.692,23.08,61.54
+Singapore,SGP,Asia,Hinge,52,1.885,76.92,17.31
+South Africa,ZAF,Africa,Boo,110,4.0,15.45,73.64
+South Africa,ZAF,Africa,Hinge,215,1.833,75.81,17.21
+South Korea,KOR,Asia,Boo,52,4.154,9.62,76.92
+South Korea,KOR,Asia,Hinge,100,1.83,79.0,14.0
+Spain,ESP,Europe,Boo,80,4.125,7.5,76.25
+Spain,ESP,Europe,Hinge,158,1.88,75.95,13.92
+Sweden,SWE,Europe,Boo,14,3.429,35.71,57.14
+Sweden,SWE,Europe,Hinge,45,1.933,73.33,15.56
+Switzerland,CHE,Europe,Boo,40,4.2,7.5,77.5
+Switzerland,CHE,Europe,Hinge,81,1.58,82.72,8.64
+Taiwan,TWN,Asia,Boo,21,4.333,4.76,80.95
+Taiwan,TWN,Asia,Hinge,45,1.867,80.0,13.33
+Tanzania,TZA,Africa,Boo,28,4.214,7.14,82.14
+Tanzania,TZA,Africa,Hinge,50,1.82,74.0,14.0
+Thailand,THA,Asia,Boo,27,4.333,3.7,85.19
+Thailand,THA,Asia,Hinge,88,1.75,75.0,13.64
+Tunisia,TUN,Africa,Boo,20,4.05,5.0,70.0
+Tunisia,TUN,Africa,Hinge,65,1.846,76.92,18.46
+Uganda,UGA,Africa,Boo,25,3.44,24.0,52.0
+Uganda,UGA,Africa,Hinge,54,1.87,77.78,18.52
+United Arab Emirates,ARE,Asia,Boo,42,3.905,19.05,69.05
+United Arab Emirates,ARE,Asia,Hinge,71,2.197,66.2,23.94
+United Kingdom,GBR,Europe,Boo,78,4.141,10.26,78.21
+United Kingdom,GBR,Europe,Hinge,168,1.875,77.38,16.07
+United States,USA,Americas,Boo,3965,4.091,10.9,74.88
+United States,USA,Americas,Hinge,1604,1.988,71.88,18.33
+Uruguay,URY,Americas,Boo,29,3.931,10.34,68.97
+Uruguay,URY,Americas,Hinge,59,1.949,74.58,18.64
+Venezuela,VEN,Americas,Boo,34,4.206,11.76,76.47
+Venezuela,VEN,Americas,Hinge,70,1.957,72.86,18.57
+Vietnam,VNM,Asia,Boo,37,4.324,2.7,81.08
+Vietnam,VNM,Asia,Hinge,81,2.062,72.84,23.46
+Zambia,ZMB,Africa,Boo,26,4.0,7.69,73.08
+Zambia,ZMB,Africa,Hinge,58,2.069,74.14,18.97
+Zimbabwe,ZWE,Africa,Boo,22,3.955,9.09,68.18
+Zimbabwe,ZWE,Africa,Hinge,59,1.78,79.66,13.56

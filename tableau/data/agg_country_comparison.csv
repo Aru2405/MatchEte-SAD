@@ -1,0 +1,71 @@
+country,iso3,continent,avg_score_Boo,avg_score_Hinge,delta_Boo_vs_Hinge
+Algeria,DZA,Africa,4.522,1.952,2.57
+Argentina,ARG,Americas,3.969,1.986,1.983
+Australia,AUS,Oceania,4.064,1.908,2.156
+Austria,AUT,Europe,4.308,1.8,2.508
+Belgium,BEL,Europe,4.316,1.62,2.696
+Bolivia,BOL,Americas,3.877,1.883,1.994
+Brazil,BRA,Americas,4.108,1.86,2.248
+Canada,CAN,Americas,4.118,1.896,2.222
+Chile,CHL,Americas,4.173,1.936,2.237
+China,CHN,Asia,4.198,1.966,2.232
+Colombia,COL,Americas,4.044,1.723,2.321
+Czech Republic,CZE,Europe,4.389,1.564,2.825
+Denmark,DNK,Europe,4.214,1.792,2.422
+Ecuador,ECU,Americas,4.089,1.951,2.138
+Egypt,EGY,Africa,4.145,1.858,2.287
+England,GBR,Europe,,5.0,
+Ethiopia,ETH,Africa,4.167,1.82,2.347
+Fiji,FJI,Oceania,3.972,2.047,1.925
+Finland,FIN,Europe,3.867,1.763,2.104
+France,FRA,Europe,4.242,2.073,2.169
+Germany,DEU,Europe,4.09,2.035,2.055
+Ghana,GHA,Africa,4.152,1.864,2.288
+Greece,GRC,Europe,4.462,2.098,2.364
+Hungary,HUN,Europe,3.737,1.878,1.859
+India,IND,Asia,4.241,1.855,2.386
+Indonesia,IDN,Asia,4.114,1.736,2.378
+Ireland,IRL,Europe,4.353,2.0,2.353
+Israel,ISR,Asia,3.959,2.101,1.858
+Italy,ITA,Europe,3.95,1.733,2.217
+Japan,JPN,Asia,3.906,1.968,1.938
+Kenya,KEN,Africa,4.192,2.046,2.146
+Libya,LBY,Africa,4.227,2.213,2.014
+Malaysia,MYS,Asia,4.625,1.711,2.914
+Mexico,MEX,Americas,4.111,1.955,2.156
+Morocco,MAR,Africa,4.178,1.989,2.189
+Namibia,NAM,Africa,4.25,2.105,2.145
+Nepal,NPL,Asia,4.4,2.0,2.4
+Netherlands,NLD,Europe,4.5,1.81,2.69
+New Zealand,NZL,Oceania,4.117,2.085,2.032
+Nigeria,NGA,Africa,3.974,2.119,1.855
+Norway,NOR,Europe,4.333,1.865,2.468
+Pakistan,PAK,Asia,3.955,2.032,1.923
+Papua New Guinea,PNG,Oceania,4.088,1.921,2.167
+Paraguay,PRY,Americas,3.978,2.309,1.669
+Peru,PER,Americas,4.254,1.664,2.59
+Philippines,PHL,Asia,4.571,2.0,2.571
+Poland,POL,Europe,4.179,1.831,2.348
+Portugal,PRT,Europe,4.185,1.754,2.431
+Qatar,QAT,Asia,3.962,2.303,1.659
+Saudi Arabia,SAU,Asia,3.917,1.705,2.212
+Senegal,SEN,Africa,4.6,1.8,2.8
+Singapore,SGP,Asia,3.692,1.885,1.807
+South Africa,ZAF,Africa,4.0,1.833,2.167
+South Korea,KOR,Asia,4.154,1.83,2.324
+Spain,ESP,Europe,4.125,1.88,2.245
+Sweden,SWE,Europe,3.429,1.933,1.496
+Switzerland,CHE,Europe,4.2,1.58,2.62
+Taiwan,TWN,Asia,4.333,1.867,2.466
+Tanzania,TZA,Africa,4.214,1.82,2.394
+Thailand,THA,Asia,4.333,1.75,2.583
+Tunisia,TUN,Africa,4.05,1.846,2.204
+Uganda,UGA,Africa,3.44,1.87,1.57
+United Arab Emirates,ARE,Asia,3.905,2.197,1.708
+United Kingdom,GBR,Europe,4.141,1.875,2.266
+United States,USA,Americas,4.091,1.988,2.103
+Uruguay,URY,Americas,3.931,1.949,1.982
+Venezuela,VEN,Americas,4.206,1.957,2.249
+Vietnam,VNM,Asia,4.324,2.062,2.262
+Zambia,ZMB,Africa,4.0,2.069,1.931
+Zimbabwe,ZWE,Africa,3.955,1.78,2.175
