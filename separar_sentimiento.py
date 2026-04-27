@@ -1,9 +1,8 @@
 import pandas as pd
 
-# cargar el csv limpio
-df = pd.read_csv("Boo_limpio.csv")
+# Lista de archivos limpios a procesar
+archivos_limpios = ["Boo_limpio.csv", "Hinge_limpio.csv"]
 
-# ---- IMPORTANTE ----
 def label_sentiment(score):
     if score <= 2:
         return "negative"
@@ -12,17 +11,34 @@ def label_sentiment(score):
     else:
         return "positive"
 
-# Convertimos la columna score a numérico por si acaso viene como texto
-df["score"] = pd.to_numeric(df["score"], errors='coerce')
+for archivo in archivos_limpios:
+    try:
+        # 1. Cargar el csv
+        df = pd.read_csv(archivo)
+        print(f"Procesando sentimientos para: {archivo}")
 
-df["label"] = df["score"].apply(label_sentiment)
+        # 2. Convertir score a numérico
+        df["score"] = pd.to_numeric(df["score"], errors='coerce')
+        df = df.dropna(subset=["score"]) # Eliminamos filas sin score válido
 
-# separar
-df_pos = df[df["label"] == "positive"]
-df_neg = df[df["label"] == "negative"]
+        # 3. Etiquetar
+        df["label"] = df["score"].apply(label_sentiment)
 
-# guardar
-df_pos.to_csv("boo_positive.csv", index=False)
-df_neg.to_csv("boo_negative.csv", index=False)
+        # 4. Separar
+        df_pos = df[df["label"] == "positive"]
+        df_neg = df[df["label"] == "negative"]
 
-print("Hecho")
+        # 5. Guardar con nombres dinámicos (basados en el nombre original)
+        prefix = archivo.split("_")[0].lower() # Extrae "boo" o "hinge"
+        
+        df_pos.to_csv(f"{prefix}_positive.csv", index=False)
+        df_neg.to_csv(f"{prefix}_negative.csv", index=False)
+
+        print(f"-> Generados: {prefix}_positive.csv y {prefix}_negative.csv")
+
+    except FileNotFoundError:
+        print(f"Error: No se encontró el archivo {archivo}. Asegúrate de haber ejecutado el script de limpieza antes.")
+    except Exception as e:
+        print(f"Error procesando {archivo}: {e}")
+
+print("\n¡Todo listo!")
