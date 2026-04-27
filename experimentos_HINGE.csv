@@ -1,0 +1,42 @@
+Modelo y Tamaño,Prompt,Entrada,Salida,Observaciones
+llama3:8b,Clasificación directa,"Total waste of time, I got banned for no reason and support never replied.",Negativo ,Identificación robusta: detecta correctamente términos de carga negativa fuerte.
+llama3:8b,Clasificación directa,"Too many paywalls, you can't even talk to people unless you buy the premium.",Negativo ,"Precisión alta: reconoce la queja sobre el modelo de negocio ""freemium""."
+llama3:8b,Clasificación directa,"This app is just a cash grab, I haven't seen a single real profile.",Negativo ,"Identificación correcta: interpreta correctamente ""cash grab"" como crítica negativa."
+llama3:8b,Clasificación directa,I reported someone for harassment and nothing happened. Unsafe platform.,Negativo ,Robustez ante temas sensibles: clasifica correctamente fallos de moderación.
+llama3:8b,Clasificación directa,Constant glitches and the app freezes whenever I try to send a message.,Negativo ,Detección eficaz: identifica fallos técnicos como sentimiento negativo.
+llama3:8b,Clasificación directa,"It's an okay app, but I haven't really met anyone special after a month.",Neutro,"Clasificación precisa: maneja bien la estructura de ""opinión mixta pero globalmente neutra""."
+llama3:8b,Clasificación directa,"The interface is decent, but the matches are pretty hit-or-miss sometimes.",Neutro,"Clasificación precisa: el término ""hit-or-miss"" es interpretado correctamente como neutro."
+llama3:8b,Clasificación directa,"It's literally same as any other dating app, nothing special here.",Negativo ,"Falso Negativo: Error de clasificación, el modelo confunde falta de originalidad con negatividad."
+llama3:8b,Clasificación directa,"I've been using it for a while, it’s fine but I'm still deciding.",Neutro,Clasificación precisa: detecta indecisión sin carga emocional negativa.
+llama3:8b,Clasificación directa,"Some features are cool, but the subscription price is a bit high.",Neutro ,Clasificación precisa: balancea el lado positivo con el negativo del precio.
+llama3:8b,Clasificación directa,Met my partner here and we've been married for over a year now! Simply amazing.,Positivo ,Alta precision: identifica correctamente el sentimiento positivo de éxito personal.
+llama3:8b,Clasificación directa,"Great app, the prompts really help start conversations with people you like.",Positivo ,Precisión alta: reconoce el valor de las funcionalidades de la app como positivo.
+llama3:8b,Clasificación directa,"Best dating app I've used, very intuitive and the matches are high quality.",Positivo ,Robustez: identifica superlativos de satisfacción sin ambigüedad.
+llama3:8b,Clasificación directa,"Loved it ❤️, finally an app that focuses on actual relationships.",Positivo ,Sensibilidad ante símbolos: identifica correctamente el emoji como refuerzo positivo.
+llama3:8b,Clasificación directa,Works as advertised. Found several interesting people within the first week.,Positivo ,Precisión: detecta neutralidad funcional positiva como un sentimiento satisfecho.
+,,,,
+,,,,
+llama3:8b,Prompt de Rol ,"Total waste of time, I got banned for no reason and support never replied.",Negativo ,Alta precisión: El Prompt de Rol mantiene la coherencia y evita sesgos de clasificación.
+llama3:8b,Prompt de Rol ,"Too many paywalls, you can't even talk to people unless you buy the premium.",Negativo ,Detección robusta: El rol asignado ayuda a identificar quejas sobre precios como negativas.
+llama3:8b,Prompt de Rol ,"This app is just a cash grab, I haven't seen a single real profile.",Negativo ,Análisis correcto: La instrucción de rol filtra el lenguaje coloquial para identificar la crítica.
+llama3:8b,Prompt de Rol ,I reported someone for harassment and nothing happened. Unsafe platform.,Negativo ,Seguridad: El modelo identifica correctamente fallos de moderación bajo el rol de clasificador.
+llama3:8b,Prompt de Rol ,Constant glitches and the app freezes whenever I try to send a message.,Negativo ,Estabilidad: El prompt de rol asegura que los problemas técnicos se marquen como negativos.
+llama3:8b,Prompt de Rol ,"It's an okay app, but I haven't really met anyone special after a month.",Neutro ,"Precisión: El Prompt de Rol corrige la ambigüedad, clasificando correctamente el sentimiento mixto."
+llama3:8b,Prompt de Rol ,"The interface is decent, but the matches are pretty hit-or-miss sometimes.",Neutro,"Consistencia: El rol de clasificador evita que el modelo confunda ""decente"" con positivo."
+llama3:8b,Prompt de Rol ,"It's literally same as any other dating app, nothing special here.",Negativo ,"Mejora técnica: El Few-shot estabiliza la clasificación, eliminando el sesgo negativo detectado en Zero-shot."
+llama3:8b,Prompt de Rol ,"I've been using it for a while, it’s fine but I'm still deciding.",Neutro,Robustez: El rol de rol ayuda a interpretar correctamente la indecisión del usuario.
+llama3:8b,Prompt de Rol ,"Some features are cool, but the subscription price is a bit high.",Neutro,Coherencia: El modelo logra equilibrar los aspectos positivos y negativos manteniendo el sentimiento neutro.
+llama3:8b,Prompt de Rol ,Met my partner here and we've been married for over a year now! Simply amazing.,Positivo ,Precisión alta: El Prompt de Rol refuerza la detección de satisfacción personal extrema.
+llama3:8b,Prompt de Rol ,"Great app, the prompts really help start conversations with people you like.",Positivo ,Alta fiabilidad: El modelo identifica correctamente el valor de la funcionalidad bajo el rol de rol.
+llama3:8b,Prompt de Rol ,"Best dating app I've used, very intuitive and the matches are high quality.",Positivo ,Estabilidad: El prompt de rol confirma la clasificación positiva ante superlativos.
+llama3:8b,Prompt de Rol ,"Loved it ❤️, finally an app that focuses on actual relationships.",Positivo ,Sensibilidad: El rol de rol permite integrar emojis como refuerzo positivo sin perder el contexto.
+llama3:8b,Prompt de Rol ,Works as advertised. Found several interesting people within the first week.,Positivo ,Precisión: El modelo clasifica correctamente la satisfacción funcional como positiva.
+,,,,
+,,,,
+llama3:8b,Prompt de Rol (Zero-shot),"It's literally same as any other dating app, nothing special here.",Negativo ,"Fallo de clasificación: el modelo carece de contexto suficiente, interpretando la comparación neutra como una crítica negativa."
+llama3:8b,Prompt de Rol (One-shot),"It's literally same as any other dating app, nothing special here.",Negativo ,Persistencia del error: un único ejemplo es insuficiente para que el modelo ajuste su razonamiento al patrón de neutralidad.
+llama3:8b,Prompt de Rol (Few-shot),"It's literally same as any other dating app, nothing special here.",Neutro,"Validación exitosa: la inclusión de ejemplos diversos permite al modelo entender el matiz neutro, corrigiendo el error previo."
+,,,,
+,,,,
+gemma2:2b,Clasificación directa,"Total waste of time, I got banned for no reason and support never replied.",Alucinaciones ( What is a negative example of something that's going on in our society?…),"Inestabilidad detectada: el modelo presenta alucinaciones (salida fuera de dominio), indicando mayor sensibilidad que Llama 3 a la configuración del prompt."
+gemma2:2b,Clasificación directa,"Too many paywalls, you can't even talk to people unless you buy the premium.",15-40/36,"Fallo en el pipeline: el modelo pierde el rol de clasificador ante prompts directos, requiriendo un ajuste estricto de parámetros o Few-shot."

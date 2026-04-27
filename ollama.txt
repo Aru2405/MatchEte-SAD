@@ -15,3 +15,11 @@ Examples:
 'It is just like the others' -> Neutral
 Analyze the following comment and classify it strictly as Positive, Negative, or Neutral. Respond with a single word: 'It's literally same as any other dating app'. --> Prompt de Rol (Few-Shot)
 
+
+Act as a data augmentation expert. Generate 50 unique, varied, and realistic dating app reviews with a 'Neutral' sentiment (score 2). Crucial instruction: Do not repeat any ideas, phrases, or structures from previous generations. Every single review must be unique. Follow the style of these 5 examples:
+- 'Still learning how to use'
+- 'Idk'
+- 'It is just like the others'
+- 'Average experience so far'
+- 'Not much to say, it is okay'
+

@@ -1,0 +1,43 @@
+Modelo y Tamaño,Prompt,Entrada,Salida,Observaciones
+llama3:8b,Clasificación directa,"Let down by lack of distance filter and bots . Getting at least four likes a day from people on the other side of the world. Yeah right. Further let down by bot auto responses here on Google play This comment does not require screenshots, and I'm sure you can email your own developers.",Negativo ,Identificación robusta: detecta correctamente la queja técnica sobre bots y filtros.
+llama3:8b,Clasificación directa,Bad,Negativo ,Alta precisión: clasifica correctamente la sentencia monosílaba sin ambigüedad.
+llama3:8b,Clasificación directa,Fake app,Negativo ,Precisión alta: reconoce el sentimiento negativo directo ante un juicio de valor sobre la app.
+llama3:8b,Clasificación directa,"Like every other dating app, only good for hypergamous females. Very damaging to society",Negativo ,Análisis correcto: interpreta la carga crítica social como un sentimiento negativo.
+llama3:8b,Clasificación directa,"La verdad no llegue a usar mucho está app pero por solo ver el ""amigues"" sé que definitivamente no quiero rodearme de ese tipo de personas 🙄",Negativo ,Detección eficaz: el modelo identifica la animosidad del usuario hacia el contenido del perfil.
+llama3:8b,Clasificación directa,This boo app is cool so far it good and still looking for a friend on here but think the subscriptions has some good deals and some do not,Positivo,"Falso Positivo: El modelo prioriza el tono amable sobre el análisis de equilibrio, clasificando como positivo."
+llama3:8b,Clasificación directa,It's OK,Neutro,Clasificación precisa: maneja correctamente la neutralidad estándar de la expresión.
+llama3:8b,Clasificación directa,meh,Neutro,Clasificación precisa: el modelo detecta el sentimiento de indiferencia sin carga negativa.
+llama3:8b,Clasificación directa,Ok,Neutro,Clasificación precisa: identifica la brevedad como un sentimiento neutro funcional.
+llama3:8b,Clasificación directa,Ehhh,Negativo ,"Falso Negativo: Error de clasificación, el modelo confunde la duda con un sentimiento negativo."
+llama3:8b,Clasificación directa,Cool app,Positivo,Alta fiabilidad: identifica correctamente el sentimiento positivo breve.
+llama3:8b,Clasificación directa,good,Positivo,Precisión alta: el modelo reconoce el sentimiento positivo unívoco.
+llama3:8b,Clasificación directa,It's better than the ads and better to understand what you are looking for,Positivo,Precisión alta: compara positivamente contra la experiencia de publicidad.
+llama3:8b,Clasificación directa,Super happy,Positivo,Robustez: identifica superlativos de satisfacción emocional sin ambigüedad.
+llama3:8b,Clasificación directa,Good apps,Positivo,Estabilidad: confirma la clasificación positiva ante una afirmación directa.
+,,,,
+llama3:8b,Prompt de Rol,"Let down by lack of distance filter and bots . Getting at least four likes a day from people on the other side of the world. Yeah right. Further let down by bot auto responses here on Google play This comment does not require screenshots, and I'm sure you can email your own developers.",Negativo ,Alta robustez: El rol mantiene la capacidad de detección negativa en textos largos y complejos.
+llama3:8b,Prompt de Rol,Bad,Negativo ,Consistencia: Clasificación directa y correcta sin ambigüedades.
+llama3:8b,Prompt de Rol,Fake app,Negativo ,Precisión alta: El modelo asume el rol de clasificador y mantiene la etiqueta negativa correcta.
+llama3:8b,Prompt de Rol,"Like every other dating app, only good for hypergamous females. Very damaging to society",Negativo ,Estabilidad: El Prompt de Rol evita que el modelo divague ante críticas sociales complejas.
+llama3:8b,Prompt de Rol,"La verdad no llegue a usar mucho está app pero por solo ver el ""amigues"" sé que definitivamente no quiero rodearme de ese tipo de personas 🙄",Negativo ,Mejora técnica: El rol asignado ayuda a clasificar correctamente la animosidad frente a la opinión neutra.
+llama3:8b,Prompt de Rol,This boo app is cool so far it good and still looking for a friend on here but think the subscriptions has some good deals and some do not,Positivo,"Corrección de sesgo: Gracias al Few-shot, el modelo ya no confunde el tono amable con un positivo, clasificándolo como Neutro."
+llama3:8b,Prompt de Rol,It's OK,Neutro,Alta fiabilidad: El modelo entiende el estándar de neutralidad dentro del rol de clasificador.
+llama3:8b,Prompt de Rol,meh,Neutro,Coherencia: Identifica correctamente la indiferencia como sentimiento neutro bajo el rol definido.
+llama3:8b,Prompt de Rol,Ok,Neutro,Estabilidad: Clasificación correcta de monosílabos en un contexto de evaluación.
+llama3:8b,Prompt de Rol,Ehhh,Negativo ,Corrección de error: El rol de clasificador (Few-shot) elimina la confusión negativa vista anteriormente.
+llama3:8b,Prompt de Rol,Cool app,Positivo,Precisión: Identifica correctamente el sentimiento positivo dentro del rol asignado.
+llama3:8b,Prompt de Rol,good,Positivo,Alta precisión: Clasificación unívoca y correcta de términos positivos simples.
+llama3:8b,Prompt de Rol,It's better than the ads and better to understand what you are looking for,Positivo,Coherencia: El modelo mantiene el foco en el sentimiento positivo sin perder el rol de clasificador.
+llama3:8b,Prompt de Rol,Super happy,Positivo,Estabilidad: El Prompt de Rol confirma la clasificación positiva ante estados emocionales claros.
+llama3:8b,Prompt de Rol,Good apps,Positivo,Alta fiabilidad: Clasificación correcta bajo la estructura de rol definida.
+,,,,
+,,,,
+llama3:8b,Prompt de Rol (Zero-shot),This boo app is cool so far it good and still looking for a friend on here but think the subscriptions has some good deals and some do not,Positivo,Fallo de clasificación: El modelo clasifica erróneamente un comentario neutro como positivo por falta de contexto semántico.
+llama3:8b,Prompt de Rol (One-shot),This boo app is cool so far it good and still looking for a friend on here but think the subscriptions has some good deals and some do not,Positivo,Persistencia del error: Un solo ejemplo es insuficiente para que el modelo ajuste su razonamiento a la etiqueta correcta.
+llama3:8b,Prompt de Rol (Few-shot),This boo app is cool so far it good and still looking for a friend on here but think the subscriptions has some good deals and some do not,Neutro,"Validación exitosa (Estrategia ganadora): La inclusión de ejemplos diversos permite al modelo entender el matiz neutro y corregir la clasificación de positivo a neutro, demostrando que el contexto es la clave."
+,,,,
+,,,,
+,,,,
+gemma2:2b,Clasificación directa,"La verdad no llegue a usar mucho está app pero por solo ver el ""amigues"" sé que definitivamente no quiero rodearme de ese tipo de personas 🙄","Alucinacion (Is it possible for a person to be on both sides of the argument about 
+whether people should have guns in schools?)","Inestabilidad detectada: el modelo presenta alucinaciones (salida fuera de dominio), indicando mayor sensibilidad que Llama 3 a la configuración del prompt."
+gemma2:2b,Clasificación directa,"Let down by lack of distance filter and bots . Getting at least four likes a day from people on the other side of the world. Yeah right. Further let down by bot auto responses here on Google play This comment does not require screenshots, and I'm sure you can email your own developers.",No ha habido respuesta,"Time-out en inferencia: el modelo no logra converger en una respuesta, sugiriendo una saturación de memoria o un parámetro de temperatura inadecuado."
