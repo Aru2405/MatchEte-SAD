@@ -64,20 +64,38 @@ def run_lda_pipeline(tokens, dictionary, corpus, nombre_grupo):
 # 3. EJECUCIÓN PRINCIPAL
 # =========================
 
-# --- PROCESAR POSITIVOS ---
+# --- PROCESAR BOO POSITIVOS ---
 try:
-    print("\n" + "="*30 + "\n ANALIZANDO POSITIVOS \n" + "="*30)
+    print("\n" + "="*30 + "\n ANALIZANDO BOO POSITIVOS \n" + "="*30)
     df_pos = pd.read_csv("boo_positive.csv")
     t_pos, d_pos, c_pos = prepare_data(df_pos)
-    model_pos = run_lda_pipeline(t_pos, d_pos, c_pos, "POSITIVOS")
+    model_pos = run_lda_pipeline(t_pos, d_pos, c_pos, "BOO POSITIVOS")
 except FileNotFoundError:
     print("Error: No se encuentra boo_positive.csv")
 
-# --- PROCESAR NEGATIVOS ---
+# --- PROCESAR BOO NEGATIVOS ---
 try:
-    print("\n" + "="*30 + "\n ANALIZANDO NEGATIVOS \n" + "="*30)
+    print("\n" + "="*30 + "\n ANALIZANDO BOO NEGATIVOS \n" + "="*30)
     df_neg = pd.read_csv("boo_negative.csv")
     t_neg, d_neg, c_neg = prepare_data(df_neg)
-    model_neg = run_lda_pipeline(t_neg, d_neg, c_neg, "NEGATIVOS")
+    model_neg = run_lda_pipeline(t_neg, d_neg, c_neg, "BOO NEGATIVOS")
 except FileNotFoundError:
     print("Error: No se encuentra boo_negative.csv")
+
+# --- PROCESAR HINGE POSITIVOS ---
+try:
+    print("\n" + "="*30 + "\n ANALIZANDO HINGE POSITIVOS \n" + "="*30)
+    df_h_pos = pd.read_csv("hinge_positive.csv")
+    t_h_pos, d_h_pos, c_h_pos = prepare_data(df_h_pos)
+    model_h_pos = run_lda_pipeline(t_h_pos, d_h_pos, c_h_pos, "HINGE POSITIVOS")
+except FileNotFoundError:
+    print("Error: No se encuentra hinge_positive.csv")
+
+# --- PROCESAR HINGE NEGATIVOS ---
+try:
+    print("\n" + "="*30 + "\n ANALIZANDO HINGE NEGATIVOS \n" + "="*30)
+    df_h_neg = pd.read_csv("hinge_negative.csv")
+    t_h_neg, d_h_neg, c_h_neg = prepare_data(df_h_neg)
+    model_h_neg = run_lda_pipeline(t_h_neg, d_h_neg, c_h_neg, "HINGE NEGATIVOS")
+except FileNotFoundError:
+    print("Error: No se encuentra hinge_negative.csv")
