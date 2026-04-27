@@ -22,15 +22,27 @@ nlp.Defaults.stop_words.add("app")
 # 2. FUNCIONES DE APOYO
 # ==========================================
 def clean_and_lemmatize(text):
-    """
-    Usa Gensim para tokenizar y spaCy para limpiar/lematizar.
-    """
+    # simple_preprocess quita puntuación (don't -> don, t)
     tokens_base = simple_preprocess(str(text), deacc=True)
-    
     doc = nlp(" ".join(tokens_base))
     
-    # Filtro: No stopword (incluye "app"), solo letras, longitud > 2
-    return [t.lemma_ for t in doc if not t.is_stop and t.is_alpha and len(t.lemma_) > 2]
+    resultado = []
+    # Lista de palabras que indican negación tras el preproceso
+    negaciones = ["not", "no", "don", "dont", "doesnt", "didnt", "isnt", "arent"]
+    
+    for t in doc:
+        token_text = t.text.lower()
+        
+        # Si es cualquier tipo de negación, lo normalizamos a "not"
+        if token_text in negaciones:
+            resultado.append("not")
+            
+        # Filtro normal: No stopword, solo letras, largo > 2
+        # (Asegúrate de que 'not' NO sea filtrado aquí)
+        elif not t.is_stop and t.is_alpha and len(t.lemma_) > 2:
+            resultado.append(t.lemma_)
+            
+    return resultado
 
 # ==========================================
 # 3. PIPELINE DE PREPROCESADO
@@ -47,8 +59,10 @@ def preprocess_pipeline(path, text_column="content"):
     print("Limpiando y lematizando...")
     data_words = df[text_column].apply(clean_and_lemmatize).tolist()
 
-    print("Generando Bigramas...")
-    phrases = Phrases(data_words, min_count=5, threshold=10)
+ 
+    print("Generando Bigramas (ej: 'not_good', 'fake_profile')...")
+    # Bajamos min_count a 3 y threshold a 5 para que sea más sensible
+    phrases = Phrases(data_words, min_count=3, threshold=5) 
     bigram_mod = Phraser(phrases)
     df["tokens"] = [bigram_mod[doc] for doc in data_words]
 
@@ -64,7 +78,6 @@ def preprocess_pipeline(path, text_column="content"):
 # 4. EJECUCIÓN PRINCIPAL
 # ==========================================
 if __name__ == "__main__":
-    # Lista de archivos a procesar
     archivos = ["Boo.csv", "Hinge.csv"]
 
     for archivo in archivos:
@@ -73,7 +86,6 @@ if __name__ == "__main__":
             df_res, dico = preprocess_pipeline(archivo)
 
             # 2. Guardar el CSV limpio
-            # Usamos "score" o lo que esté disponible
             col_original = "content" if "content" in df_res.columns else df_res.columns[0]
             col_score = "score" if "score" in df_res.columns else df_res.columns[-1]
             
@@ -83,9 +95,19 @@ if __name__ == "__main__":
             # 3. Guardar el diccionario
             dico.save(archivo.replace(".csv", "_gensim.dict"))
 
-            print(f"¡Hecho! Generado: {nombre_salida}")
+            # --- COMPROBACIÓN DE BIGRAMAS (EL TEST) ---
+            con_not = df_res[df_res['text_final'].str.contains('not_', na=False)]
+            print(f">>> Análisis de {archivo}:")
+            print(f"    - Bigramas de negación ('not_...') encontrados: {len(con_not)}")
+            if len(con_not) > 0:
+                print(f"    - Ejemplo de texto con bigrama: {con_not['text_final'].iloc[0][:100]}")
+            
+            print(f"¡Hecho! Generado: {nombre_salida}\n")
             
         except Exception as e:
             print(f"Error procesando {archivo}: {e}")
 
-    print("\nProceso finalizado para todos los archivos.")
+    print("Proceso finalizado para todos los archivos.")
+    
+    
+    
