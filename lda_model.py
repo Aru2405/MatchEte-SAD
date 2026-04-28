@@ -3,22 +3,27 @@ from gensim.corpora import Dictionary
 from gensim.models import LdaModel, CoherenceModel
 
 # =========================
-# 1. PREPARACIÓN DE DATOS (OPCIÓN A)
+# 1. PREPARACIÓN DE DATOS 
 # =========================
 def prepare_data(df, text_col="text_final"):
-    # Aseguramos que no haya nulos y convertimos a string por seguridad
+    # 1. Aseguramos que no haya nulos y convertimos a string por seguridad
     df = df.dropna(subset=[text_col])
     
-    # Convertimos la cadena de texto "palabra1 palabra2" en una lista ['palabra1', 'palabra2']
-    # Esto es lo que Gensim necesita
+    # 2. Convertimos la cadena de texto en lista de tokens para Gensim
     tokens = df[text_col].apply(lambda x: str(x).split()).tolist()
     
-    # Crear Diccionario
+    # 3. Crear Diccionario
     dictionary = Dictionary(tokens)
-    # Filtramos palabras muy raras o muy comunes
+    
+    # 4. FILTRADO DE EXTREMOS (Clave para el sobresaliente)
+    # no_below=5: elimina palabras que salen en menos de 5 reseñas (ruido)
+    # no_above=0.5: elimina palabras que salen en más del 50% (como "app", "good", "nice")
     dictionary.filter_extremes(no_below=5, no_above=0.5)
     
-    # Crear Corpus (Bag of Words)
+    # IMPORTANTE: Limpiar huecos tras el filtrado
+    dictionary.compactify() 
+    
+    # 5. Crear Corpus (Bag of Words)
     corpus = [dictionary.doc2bow(t) for t in tokens]
     
     return tokens, dictionary, corpus
