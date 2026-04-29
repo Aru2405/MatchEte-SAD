@@ -19,25 +19,27 @@ for archivo in archivos_limpios:
 
         # 2. Convertir score a numérico
         df["score"] = pd.to_numeric(df["score"], errors='coerce')
-        df = df.dropna(subset=["score"]) # Eliminamos filas sin score válido
+        df = df.dropna(subset=["score"]) 
 
         # 3. Etiquetar
         df["label"] = df["score"].apply(label_sentiment)
 
-        # 4. Separar
+        # 4. Separar (AQUÍ FALTABA EL NEUTRAL)
         df_pos = df[df["label"] == "positive"]
         df_neg = df[df["label"] == "negative"]
+        df_neu = df[df["label"] == "neutral"] # <--- ESTA LÍNEA FALTABA
 
-        # 5. Guardar con nombres dinámicos (basados en el nombre original)
-        prefix = archivo.split("_")[0].lower() # Extrae "boo" o "hinge"
+        # 5. Guardar con nombres dinámicos
+        prefix = archivo.split("_")[0].lower() 
         
         df_pos.to_csv(f"{prefix}_positive.csv", index=False)
         df_neg.to_csv(f"{prefix}_negative.csv", index=False)
+        df_neu.to_csv(f"{prefix}_neutral.csv", index=False) # <--- ESTA LÍNEA FALTABA
 
-        print(f"-> Generados: {prefix}_positive.csv y {prefix}_negative.csv")
+        print(f"-> Generados: {prefix}_positive.csv, {prefix}_negative.csv y {prefix}_neutral.csv") # <--- Y ESTE AVISO
 
     except FileNotFoundError:
-        print(f"Error: No se encontró el archivo {archivo}. Asegúrate de haber ejecutado el script de limpieza antes.")
+        print(f"Error: No se encontró el archivo {archivo}.")
     except Exception as e:
         print(f"Error procesando {archivo}: {e}")
 
