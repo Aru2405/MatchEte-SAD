@@ -6,49 +6,37 @@ from gensim.models import LdaModel, CoherenceModel
 # 1. PREPARACIÓN DE DATOS 
 # =========================
 def prepare_data(df, text_col="text_final"):
-    # 1. Aseguramos que no haya nulos y convertimos a string por seguridad
     df = df.dropna(subset=[text_col])
-    
-    # 2. Convertimos la cadena de texto en lista de tokens para Gensim
     tokens = df[text_col].apply(lambda x: str(x).split()).tolist()
-    
-    # 3. Crear Diccionario
     dictionary = Dictionary(tokens)
     
-    # 4. FILTRADO DE EXTREMOS (Clave para el sobresaliente)
-    # no_below=5: elimina palabras que salen en menos de 5 reseñas (ruido)
-    # no_above=0.5: elimina palabras que salen en más del 50% (como "app", "good", "nice")
+    # El filtro de 0.5 es lo que quita el "good" y "app" que nos molestaban
     dictionary.filter_extremes(no_below=5, no_above=0.5)
-    
-    # IMPORTANTE: Limpiar huecos tras el filtrado
     dictionary.compactify() 
     
-    # 5. Crear Corpus (Bag of Words)
     corpus = [dictionary.doc2bow(t) for t in tokens]
-    
     return tokens, dictionary, corpus
 
 # =========================
 # 2. LDA + COHERENCIA
 # =========================
 def run_lda_pipeline(tokens, dictionary, corpus, nombre_grupo):
-    print(f"\n--- Buscando el mejor número de temas para {nombre_grupo} ---")
+    print(f"\n" + "="*40)
+    print(f" ANALIZANDO: {nombre_grupo}")
+    print("="*40)
+    
+    if len(corpus) == 0:
+        print(f"Aviso: No hay datos para {nombre_grupo}. Saltando...")
+        return None
+
     best_k = 0
     best_score = -1
     best_model = None
 
-    # Probamos de 2 a 8 temas para ver cuál es más coherente
     for k in range(2, 9):
         lda = LdaModel(corpus=corpus, id2word=dictionary, num_topics=k, passes=10, random_state=42)
-        
-        coherence_model = CoherenceModel(
-            model=lda, 
-            texts=tokens, 
-            dictionary=dictionary, 
-            coherence='c_v'
-        )
+        coherence_model = CoherenceModel(model=lda, texts=tokens, dictionary=dictionary, coherence='c_v')
         score = coherence_model.get_coherence()
-        
         print(f"Temas: {k} | Coherencia: {score:.4f}")
         
         if score > best_score:
@@ -57,50 +45,34 @@ def run_lda_pipeline(tokens, dictionary, corpus, nombre_grupo):
             best_model = lda
 
     print(f"\n GANADOR para {nombre_grupo}: {best_k} temas (Coherencia: {best_score:.4f})")
-    
-    # Mostramos los temas del mejor modelo
-    print(f"\nInterpretación de Temas ({nombre_grupo}):")
     for idx, topic in best_model.print_topics(-1):
         print(f"  Tema {idx}: {topic}")
-    
     return best_model
 
 # =========================
-# 3. EJECUCIÓN PRINCIPAL
+# 3. EJECUCIÓN PRINCIPAL (CON LOS 6 ARCHIVOS)
 # =========================
 
-# --- PROCESAR BOO POSITIVOS ---
-try:
-    print("\n" + "="*30 + "\n ANALIZANDO BOO POSITIVOS \n" + "="*30)
-    df_pos = pd.read_csv("boo_positive.csv")
-    t_pos, d_pos, c_pos = prepare_data(df_pos)
-    model_pos = run_lda_pipeline(t_pos, d_pos, c_pos, "BOO POSITIVOS")
-except FileNotFoundError:
-    print("Error: No se encuentra boo_positive.csv")
+# Esta lista es la que le dice al script que busque los NEUTROS también
+datasets = [
+    ("boo_positive.csv", "BOO POSITIVOS"),
+    ("boo_negative.csv", "BOO NEGATIVOS"),
+    ("boo_neutral.csv", "BOO NEUTROS"),
+    ("hinge_positive.csv", "HINGE POSITIVOS"),
+    ("hinge_negative.csv", "HINGE NEGATIVOS"),
+    ("hinge_neutral.csv", "HINGE NEUTROS")
+]
 
-# --- PROCESAR BOO NEGATIVOS ---
-try:
-    print("\n" + "="*30 + "\n ANALIZANDO BOO NEGATIVOS \n" + "="*30)
-    df_neg = pd.read_csv("boo_negative.csv")
-    t_neg, d_neg, c_neg = prepare_data(df_neg)
-    model_neg = run_lda_pipeline(t_neg, d_neg, c_neg, "BOO NEGATIVOS")
-except FileNotFoundError:
-    print("Error: No se encuentra boo_negative.csv")
+for archivo, etiqueta in datasets:
+    try:
+        df = pd.read_csv(archivo)
+        t, d, c = prepare_data(df)
+        run_lda_pipeline(t, d, c, etiqueta)
+    except FileNotFoundError:
+        print(f"\n[!] Saltando {archivo}: No existe.")
+    except Exception as e:
+        print(f"\n[!] Error en {etiqueta}: {e}")
 
-# --- PROCESAR HINGE POSITIVOS ---
-try:
-    print("\n" + "="*30 + "\n ANALIZANDO HINGE POSITIVOS \n" + "="*30)
-    df_h_pos = pd.read_csv("hinge_positive.csv")
-    t_h_pos, d_h_pos, c_h_pos = prepare_data(df_h_pos)
-    model_h_pos = run_lda_pipeline(t_h_pos, d_h_pos, c_h_pos, "HINGE POSITIVOS")
-except FileNotFoundError:
-    print("Error: No se encuentra hinge_positive.csv")
-
-# --- PROCESAR HINGE NEGATIVOS ---
-try:
-    print("\n" + "="*30 + "\n ANALIZANDO HINGE NEGATIVOS \n" + "="*30)
-    df_h_neg = pd.read_csv("hinge_negative.csv")
-    t_h_neg, d_h_neg, c_h_neg = prepare_data(df_h_neg)
-    model_h_neg = run_lda_pipeline(t_h_neg, d_h_neg, c_h_neg, "HINGE NEGATIVOS")
-except FileNotFoundError:
-    print("Error: No se encuentra hinge_negative.csv")
+print("\n" + "="*40)
+print(" ANÁLISIS COMPLETO FINALIZADO ")
+print("="*40)
