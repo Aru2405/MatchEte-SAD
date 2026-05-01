@@ -13,3 +13,4 @@ sentence-transformers
 pyLDAvis
 openpyxl
 langdetect
+ollama
