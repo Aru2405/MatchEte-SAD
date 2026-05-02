@@ -3,26 +3,24 @@ import numpy as np
 import os
 from gensim.corpora import Dictionary
 from gensim.models import LdaModel
+from gensim.models.coherencemodel import CoherenceModel
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.cluster import KMeans
+import matplotlib.pyplot as plt
 
-# =========================================================
-# 1. DICCIONARIO DE TEMAS (Esto tengo que revisarlo, lo he hecho rapido )
-# =========================================================
+
+# 1. DICCIONARIO DE TEMAS 
 TOPIC_NAMES = {
-    0: "Análisis de Producto y Modelo Premium",
-    1: "Satisfacción y Feedback Rápido",
-    2: "Seguridad, Moderación y Baneos",
-    3: "Frustración, Críticas y Desinstalación",
-    4: "Comunidad, Conexión y Dating",
-    5: "Usabilidad e Interacción Social"
+    0: "Personalidad y experiencia ",
+    1: "Crítica al Modelo de Negocio y Accesibilidad",
+    2: "Conexiones y Éxito Social",
+    3: "Feedback Estético y Reacción Visual (Emojis)"
 }
 
-UMBRAL_LONGITUD = 10  # Reseñas > 10 palabras -> LDA, resto -> K-Means
+UMBRAL_LONGITUD = 10
 
-# =========================================================
+
 # 2. PROCESO HÍBRIDO
-# =========================================================
 datasets = [
     "boo_positive.csv", "boo_negative.csv", "boo_neutral.csv",
     "hinge_positive.csv", "hinge_negative.csv", "hinge_neutral.csv"
@@ -35,85 +33,132 @@ def process_hybrid():
         if not os.path.exists(file):
             continue
         
-        print(f"--- Analizando: {file} ---")
+        print(f"\n--- Analizando: {file} ---")
         df = pd.read_csv(file)
-        
-        # Asegurar que text_final existe y no es nulo
         df = df.dropna(subset=['text_final'])
         
-        # Metadatos del archivo
         df['app'] = 'Boo' if 'boo' in file else 'Hinge'
         df['sentimiento_analisis'] = 'positive' if 'positive' in file else ('negative' if 'negative' in file else 'neutral')
         df['num_palabras'] = df['text_final'].apply(lambda x: len(str(x).split()))
 
-        # --- MOTOR A: K-MEANS (Para reseñas cortas) ---
+        # K-MEANS 
         vectorizer = TfidfVectorizer(max_features=1000, ngram_range=(1, 2))
         X_tfidf = vectorizer.fit_transform(df['text_final'])
-        km = KMeans(n_clusters=6, random_state=42, n_init=10)
+        
+
+        # CODO KMEANS 
+        inertia = []
+        ks_kmeans = range(2, 8)
+
+        print("\n--- Buscando mejor número de clusters (KMeans) ---")
+
+        for k in ks_kmeans:
+            km_temp = KMeans(n_clusters=k, random_state=42, n_init=10)
+            km_temp.fit(X_tfidf)
+            inertia.append(km_temp.inertia_)
+            print(f"K={k} | Inertia={km_temp.inertia_:.2f}")
+
+        # Gráfico Codo KMeans
+        plt.figure()
+        plt.plot(ks_kmeans, inertia, marker='o')
+        plt.xlabel("Número de clusters (k)")
+        plt.ylabel("Inercia")
+        plt.title(f"Codo KMeans - {file}")
+        plt.grid()
+        plt.savefig(f"codo_kmeans_{file}.png")
+        plt.close()
+
+        # Usamos K=4 para KMeans
+        km = KMeans(n_clusters=4, random_state=42, n_init=10)
         df['kmeans_cluster'] = km.fit_predict(X_tfidf)
 
-        # --- MOTOR B: LDA (Para reseñas largas) ---
+        #  LDA MODEL
         tokens_list = df['text_final'].apply(lambda x: str(x).split()).tolist()
         dictionary = Dictionary(tokens_list)
         corpus = [dictionary.doc2bow(t) for t in tokens_list]
-        lda = LdaModel(corpus=corpus, id2word=dictionary, num_topics=6, passes=10, random_state=42)
+
+
+        # COHERENCIA LDA
+        coherencias = []
+        ks_lda = range(2, 11)
+
+        print("\n--- Buscando mejor número de clusters (LDA) ---")
+
+        for k in ks_lda:
+            lda_temp = LdaModel(corpus=corpus,
+                                id2word=dictionary,
+                                num_topics=k,
+                                passes=10,
+                                random_state=42)
+            
+            coherence_model = CoherenceModel(model=lda_temp,
+                                             texts=tokens_list,
+                                             dictionary=dictionary,
+                                             coherence='c_v')
+            
+            score = coherence_model.get_coherence()
+            coherencias.append(score)
+            print(f"K={k} | Coherencia={score:.4f}")
+
+        # Gráfico Coherencia LDA
+        plt.figure()
+        plt.plot(ks_lda, coherencias, marker='o')
+        plt.xlabel("Número de clusters (k)")
+        plt.ylabel("Coherencia (c_v)")
+        plt.title(f"Codo LDA - {file}")
+        plt.grid()
+        plt.savefig(f"codo_{file}.png")
+        plt.close()
+
+        BEST_K = 4  # Ajustado a 4 según  pruebas
+
+        lda = LdaModel(corpus=corpus,
+                       id2word=dictionary,
+                       num_topics=BEST_K,
+                       passes=10,
+                       random_state=42)
+
+        # --- EVALUACIÓN FINAL ---
+        coherence_model_cv = CoherenceModel(model=lda, texts=tokens_list, dictionary=dictionary, coherence='c_v')
+        score_cv = coherence_model_cv.get_coherence()
+
+        coherence_model_umass = CoherenceModel(model=lda, corpus=corpus, dictionary=dictionary, coherence='u_mass')
+        score_umass = coherence_model_umass.get_coherence()
+
+        print(f"\n--- RESULTADO FINAL (K={BEST_K}) ---")
+        print(f"Score Cv: {score_cv:.4f}")
+        print(f"Score UMass: {score_umass:.4f}")
 
         def get_lda_data(text):
             bow = dictionary.doc2bow(str(text).split())
             probs = lda.get_document_topics(bow, minimum_probability=0)
-            res = {f"Prob_Topico_{i}": 0.0 for i in range(6)}
+            res = {f"Prob_Topico_{i}": 0.0 for i in range(BEST_K)}
             for p in probs:
-                if isinstance(p, (tuple, list)):
-                    res[f"Prob_Topico_{p[0]}"] = p[1]
-            
-            # Determinamos el cluster ganador del LDA aquí mismo
+                res[f"Prob_Topico_{p[0]}"] = p[1]
             res['lda_cluster'] = int(max(res, key=res.get).replace('Prob_Topico_', ''))
             return pd.Series(res)
 
-        # Aplicamos LDA y concatenamos resultados
         lda_info = df['text_final'].apply(get_lda_data)
         df = pd.concat([df, lda_info], axis=1)
 
-        # --- LÓGICA DE DECISIÓN HÍBRIDA ---
         def apply_hybrid_logic(row):
             if row['num_palabras'] > UMBRAL_LONGITUD:
                 return row['lda_cluster'], 'LDA'
             else:
                 return row['kmeans_cluster'], 'K-Means'
 
-        df[['Cluster_Dominante', 'Modelo']] = df.apply(
-            lambda x: pd.Series(apply_hybrid_logic(x)), axis=1
-        )
-
-        # Asignar nombres bonitos y extraer palabras clave visuales
+        df[['Cluster_Dominante', 'Modelo']] = df.apply(lambda x: pd.Series(apply_hybrid_logic(x)), axis=1)
         df['Tema_Nombre'] = df['Cluster_Dominante'].map(TOPIC_NAMES)
         df['Palabras_Clave'] = df['text_final'].apply(lambda x: ", ".join(str(x).split()[:8]))
 
         all_dfs.append(df)
 
-    if not all_dfs:
-        print("Error: No se encontraron archivos para procesar.")
-        return
-
-    # UNIFICACIÓN Y EXPORTACIÓN
-    final_unified = pd.concat(all_dfs, ignore_index=True)
-    
-    # Lista de columnas definitiva para Tableau (incluyendo tus metadatos)
-    columnas_finales = [
-        'reviewId', 'content', 'score', 'gender', 'location', 'date', 
-        'sentimiento_analisis', 'text_final', 'num_palabras', 'Cluster_Dominante', 
-        'Tema_Nombre', 'Modelo', 'Palabras_Clave'
-    ] + [f"Prob_Topico_{i}" for i in range(6)]
-    
-    # Creamos columnas vacías si alguna falta para evitar errores de exportación
-    for col in columnas_finales:
-        if col not in final_unified.columns:
-            final_unified[col] = np.nan
-
-    # Guardar CSV final
-    final_unified[columnas_finales].to_csv("AnalisisClustering.csv", index=False)
-    print(f"\n ¡PROCESO COMPLETADO!")
-    print(f"Archivo generado: AnalisisClustering.csv con {len(final_unified)} registros.")
+    if all_dfs:
+        final_unified = pd.concat(all_dfs, ignore_index=True)
+        final_unified.to_csv("AnalisisClustering.csv", index=False)
+        print("\nROCESO COMPLETADO")
+    else:
+        print("No se encontraron archivos para procesar.")
 
 if __name__ == "__main__":
     process_hybrid()
