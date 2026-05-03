@@ -29,10 +29,21 @@ Fase dedicada a la optimización de los algoritmos de Machine Learning y su eval
 
 ### 3. Clustering Temático (Paula)
 
-Identificación de los temas clave que preocupan o satisfacen a los usuarios:
+Para profundizar en el análisis más allá del sentimiento, implementamos una estrategia de procesamiento de lenguaje natural (NLP) para agrupar las reseñas por temática.
 
-- **Optimización**: Selección de **k=4** clusters basándose en el análisis de la curva del codo (inercia) y la coherencia de los temas.
-- **Resultados**: Segmentación en categorías como Personalidad, Modelo de Negocio, Conexiones y Feedback Estético.
+- Análisis reseñas y Segmentación por Sentimiento: El modelo después de preprocesar los datos, procesa de forma independiente los datasets de Positive, Negative y Neutral. Esto evita que los tópicos se mezclen y permite identificar problemas específicos.
+
+
+- Modelado Híbrido: Se utilizaron dos enfoques según la longitud de los textos:
+1. *K-Means*: Aplicado sobre las reseñas de texto corto para una segmentación rápida basada en frecuencia de términos.
+2. *LDA* (Latent Dirichlet Allocation): Utilizado en reseñas extensas para descubrir estructuras de tópicos más profundas y latentes.
+
+- Optimización (K=4): Tras analizar la curva del codo (Inercia) y los niveles de coherencia
+- TEMAS ENCONTRADOS:
+    - 1. Negativos: Centrados en Gestión de Cuentas (Baneos), Monetización (Barreras de Pago), Inseguridad (Estafas) y Mensajería.
+    - 2. Positivos: Enfocados en Autenticidad de Perfiles, Optimización de Tiempo, UX y Descubrimiento de Personas.
+- OUTPUT: El script genera AnalisisClustering.csv, unificando Boo y Hinge con sus respectivos "Tema_Nombre"
+
 
 ### 4. Visualización y Storytelling - Tableau (Iván)
 
