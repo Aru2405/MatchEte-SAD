@@ -1,58 +1,103 @@
 import pandas as pd
-import pickle
-import sys
-import os
+import joblib
+import json
+import re
+import string
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.svm import LinearSVC
-from sklearn.pipeline import Pipeline
-from sklearn.metrics import classification_report, f1_score
+from sklearn.linear_model import LogisticRegression
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import f1_score
+from imblearn.over_sampling import SMOTE
 
-def entrenar_modelo():
-    # 1. Validar argumentos de la terminal
-    if len(sys.argv) < 3:
-        print("\nUso: python entrenar_ia.py <archivo_train.csv> <archivo_dev.csv>")
-        print("Ejemplo: python entrenar_ia.py train_balanceado.csv dev.csv")
-        return
+def preprocesar(text):
+    if pd.isna(text): return ""
+    text = str(text).lower()
+    # Limpieza estándar que te dio el 0.55
+    text = re.sub(r'[^a-z0-9\s]', '', text)
+    return text.strip()
 
-    file_train = sys.argv[1]
-    file_dev = sys.argv[2]
+def main():
+    # 1. CARGAR CONFIGURACIÓN
+    with open('configuration.json', 'r') as f:
+        config = json.load(f)
+    
+    p = config['project_params']
+    a = config['algorithm_params']
 
-    if not os.path.exists(file_train) or not os.path.exists(file_dev):
-        print("Error: Uno de los archivos no existe.")
-        return
+    # 2. CARGA DE DATOS
+    train_file = p['train_ia_path'] if p['balancing_strategy'] == "IA" else p['train_path']
+    print(f"Cargando entrenamiento desde: {train_file}")
+    
+    df_train = pd.read_csv(train_file)
+    df_dev = pd.read_csv(p['dev_path'])
 
-    # 2. Cargar los datos (usando las columnas que descubrimos antes: content y score)
-    print(f"Cargando datos de {file_train} y {file_dev}...")
-    df_train = pd.read_csv(file_train).dropna(subset=['content', 'score'])
-    df_dev = pd.read_csv(file_dev).dropna(subset=['content', 'score'])
+    # 3. PREPROCESAMIENTO
+    print(f"Preprocesando columna: {p['text_column']}...")
+    df_train[p['text_column']] = df_train[p['text_column']].apply(preprocesar)
+    df_dev[p['text_column']] = df_dev[p['text_column']].apply(preprocesar)
 
-    X_train, y_train = df_train['content'], df_train['score'].astype(str)
-    X_dev, y_dev = df_dev['content'], df_dev['score'].astype(str)
+    # 4. VECTORIZACIÓN (TF-IDF)
+    print("Vectorizando con TF-IDF (Volviendo a Bigramas)...")
+    tfidf_args = a['tfidf']
+    vectorizer = TfidfVectorizer(
+        max_features=tfidf_args['max_features'],
+        ngram_range=tuple(tfidf_args['ngram_range']),
+        stop_words=None,
+        sublinear_tf=True 
+    )
+    
+    X_train_raw = vectorizer.fit_transform(df_train[p['text_column']])
+    X_dev = vectorizer.transform(df_dev[p['text_column']])
+    y_train = df_train[p['target_column']]
+    y_dev = df_dev[p['target_column']]
 
-    # 3. Crear el Pipeline de la IA
-    # Usamos TF-IDF con n-gramas (detecta frases de 1 y 2 palabras)
-    print("Entrenando el modelo ganador...")
-    modelo_final = Pipeline([
-        ('tfidf', TfidfVectorizer(ngram_range=(1, 2), max_features=10000)),
-        ('clf', LinearSVC(C=0.8, class_weight='balanced', max_iter=2000))
-    ])
+    # 5. BALANCEO (SMOTE)
+    if p['balancing_strategy'] == "SMOTE":
+        print("Aplicando SMOTE...")
+        sm = SMOTE(random_state=42)
+        X_train, y_train = sm.fit_resample(X_train_raw, y_train)
+    else:
+        X_train = X_train_raw
 
-    modelo_final.fit(X_train, y_train)
+    # 6. COMPETICIÓN DE MODELOS
+    lr_params = a['logistic_regression']
+    knn_params = a['knn']
 
-    # 4. Evaluación con el set de DEV (Validación)
-    y_pred = modelo_final.predict(X_dev)
-    score_f1 = f1_score(y_dev, y_pred, average='macro')
+    models = {
+        "LR": LogisticRegression(
+            max_iter=5000, 
+            C=lr_params['C'], 
+            solver='lbfgs',
+            random_state=42
+        ),
+        "KNN": KNeighborsClassifier(
+            n_neighbors=knn_params['n_neighbors'],
+            weights=knn_params['weights'],
+            metric=knn_params['metric']
+        )
+    }
 
-    print("\n" + "="*40)
-    print(f"RESULTADO EN DEV - F1-SCORE: {score_f1:.4f}")
-    print("="*40)
-    print(classification_report(y_dev, y_pred))
+    best_f1 = 0
+    best_model = None
+    best_name = ""
 
-    # 5. Guardar el "Cerebro" (.pkl)
-    nombre_modelo = "mejor_modelo_ia.pkl"
-    with open(nombre_modelo, 'wb') as f:
-        pickle.dump(modelo_final, f)
-   
+    print("\n--- Competición de la IA ---")
+    for name, model in models.items():
+        model.fit(X_train, y_train)
+        preds = model.predict(X_dev)
+        f1 = f1_score(y_dev, preds, average='macro')
+        print(f"Modelo {name}: F1-Score Dev = {f1:.4f}")
+        
+        if f1 > best_f1:
+            best_f1 = f1
+            best_model = model
+            best_name = name
+
+    print(f"\n🏆 GANADOR FINAL: {best_name} con F1: {best_f1:.4f}")
+    joblib.dump(best_model, p['model_name'])
+    joblib.dump(vectorizer, p['vectorizer_name'])
+    
+    print(f"Archivos {p['model_name']} y {p['vectorizer_name']} listos. ✅")
 
 if __name__ == "__main__":
-    entrenar_modelo()
+    main()
