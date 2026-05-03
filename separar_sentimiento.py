@@ -27,16 +27,16 @@ for archivo in archivos_limpios:
         # 4. Separar (AQUÍ FALTABA EL NEUTRAL)
         df_pos = df[df["label"] == "positive"]
         df_neg = df[df["label"] == "negative"]
-        df_neu = df[df["label"] == "neutral"] # <--- ESTA LÍNEA FALTABA
+        df_neu = df[df["label"] == "neutral"] 
 
         # 5. Guardar con nombres dinámicos
         prefix = archivo.split("_")[0].lower() 
         
         df_pos.to_csv(f"{prefix}_positive.csv", index=False)
         df_neg.to_csv(f"{prefix}_negative.csv", index=False)
-        df_neu.to_csv(f"{prefix}_neutral.csv", index=False) # <--- ESTA LÍNEA FALTABA
+        df_neu.to_csv(f"{prefix}_neutral.csv", index=False) 
 
-        print(f"-> Generados: {prefix}_positive.csv, {prefix}_negative.csv y {prefix}_neutral.csv") # <--- Y ESTE AVISO
+        print(f"-> Generados: {prefix}_positive.csv, {prefix}_negative.csv y {prefix}_neutral.csv") 
 
     except FileNotFoundError:
         print(f"Error: No se encontró el archivo {archivo}.")
