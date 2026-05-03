@@ -34,11 +34,11 @@ Para profundizar en el análisis más allá del sentimiento, implementamos una e
 - Análisis reseñas y Segmentación por Sentimiento: El modelo después de preprocesar los datos, procesa de forma independiente los datasets de Positive, Negative y Neutral. Esto evita que los tópicos se mezclen y permite identificar problemas específicos.
 
 
-- Modelado Híbrido: Se utilizaron dos enfoques según la longitud de los textos:
-1. *K-Means*: Aplicado sobre las reseñas de texto corto para una segmentación rápida basada en frecuencia de términos.
-2. *LDA* (Latent Dirichlet Allocation): Utilizado en reseñas extensas para descubrir estructuras de tópicos más profundas y latentes.
+- Modelado Híbrido(Umbral de 10 palabras): Se utilizaron dos enfoques según la longitud de los textos:
+1. *K-Means*: Aplicado sobre las reseñas de texto corto (<10 palabras) para una segmentación rápida basada en frecuencia de términos.
+2. *LDA* (Latent Dirichlet Allocation): Utilizado en reseñas extensas (>10 palabras) para descubrir estructuras de tópicos más profundas y latentes.
 
-- Optimización (K=4): Tras analizar la curva del codo (Inercia) y los niveles de coherencia
+- Optimización (K=4): El número de clusters se determinó mediante el análisis de la curva del codo (Inercia) para K-Means y el cálculo de Coherencia (c_v y u_mass) para LDA, asegurando grupos interpretables y estables.
 - TEMAS ENCONTRADOS:
     - 1. Negativos: Centrados en Gestión de Cuentas (Baneos), Monetización (Barreras de Pago), Inseguridad (Estafas) y Mensajería.
     - 2. Positivos: Enfocados en Autenticidad de Perfiles, Optimización de Tiempo, UX y Descubrimiento de Personas.
