@@ -48,9 +48,9 @@ Scripts ejecutados en orden por [`tableau/run_all.py`](tableau/run_all.py):
 | 1   | `01_prepare_data.py`               | `data/dataset_unified.csv` — Boo+Hinge unificados, validados, con `sentiment` derivado y campos temporales/demográficos         |
 | 2   | `02_geocode.py`                    | `data/dataset_geo.csv` — añade `lat`, `lon`, `iso3`, `continent`                                                                |
 | 3   | `03_aggregations.py`               | 9 ficheros `data/agg_*.csv` con agregaciones que responden las 4 preguntas obligatorias                                         |
-| 4   | `04_word_frequencies.py`           | `data/words_top_by_segment.csv` — fallback de palabras frecuentes (sustituido por output real de clustering en producción)      |
+| 4   | `04_word_frequencies.py`           | `data/word_frequencies_BY_TOPIC.csv — Frecuencias segmentadas por App, Sentimiento y Tema (Cluster) para análisis profundo.      |
 | 5   | `05_extra_insights.py`             | 6 ficheros `data/extra_*.csv` para preguntas propias (sesgo de género, polarización, mercados sub-representados)                |
-| 6   | `06_integrate_clustering.py`       | `data/clusters_keywords.csv` y `data/clusters_per_review.csv` — extrae las palabras top por cluster desde los outputs de KMeans |
+
 
 Para regenerar todo:
 
@@ -81,7 +81,7 @@ Se ha desarrollado una **Story de Tableau de 6 niveles** diseñada para transfor
 - **D2 — Análisis Geográfico**: Mapeo de la satisfacción por países identificando el liderazgo máximo en Malasia (+2,91★) y Chequia (+2,83★). Boo lidera en el 100% de países con datos.
 - **D3 — Evolución Temporal**: Hinge tardó 4,5 años en superar la fase inicial de 1★; Boo solo 1,5 años — el competidor lleva una década intentando recuperar a sus usuarios.
 - **D4 — Segmentación Demográfica**: Las mujeres son la base más leal de Boo (66% les dan 5★, 3% 1★). Los hombres son los más críticos de Hinge (66% les dan 1★, 9% 5★). Confirmamos que los usuarios insatisfechos escriben textos más extensos.
-- **D5 — La Voz del Usuario (Wordclouds)**: Visualización de términos clave extraídos de los clusters, revelando que las críticas hacia la competencia se centran en problemas de monetización (`pay`, `money`) y bloqueos de cuenta (`banned`).
+- **D5 — La Voz del Usuario e Indagación de Tópicos** :Es la representación visual de los clusters. Implementamos una cuadrícula 2x2 que cruza App vs. Sentimiento, permitiendo filtrar por el Tema detectado en la fase de Clustering.Además cuenta con un  gráfico de barras anexo revela que la insatisfacción en Hinge es estructural y económica. Las palabras más frecuentes en las quejas son pay,money y month (monetización agresiva), seguidas de ban y account (problemas de moderación). A Diferencia de Boo que se centran en la experiencia de usuario y personalidad, validando su ventaja competitiva.
 - **D6 — Resumen Ejecutivo y Recomendaciones**: Dashboard final con KPIs críticos y tres acciones propuestas: mantener inversión en mercados líderes, reforzar marketing en zonas de competencia estrecha (UAE/Paraguay) y comunicar la ventaja diferencial de Boo frente a las restricciones de Hinge.
 
 #### 4.4 Notas metodológicas
