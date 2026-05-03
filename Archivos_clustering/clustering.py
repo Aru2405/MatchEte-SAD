@@ -8,7 +8,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
 
-# 1. DICCIONARIOS DE TEMAS 
+# 1. DICCIONARIOS DE TEMAS (Tus nombres reales)
 NOMBRES_CLUSTERS = {
     'positive': {
         0: "Calidad de la Comunidad y Perfiles Auténticos",
@@ -33,96 +33,81 @@ NOMBRES_CLUSTERS = {
 UMBRAL_LONGITUD = 10
 BEST_K = 4
 
-grupos_datasets = {
-    'positive': ["boo_positive.csv", "hinge_positive.csv"],
-    'negative': ["boo_negative.csv", "hinge_negative.csv"],
-    'neutral': ["boo_neutral.csv", "hinge_neutral.csv"]
-}
+datasets = [
+    "boo_positive.csv", "boo_negative.csv", "boo_neutral.csv",
+    "hinge_positive.csv", "hinge_negative.csv", "hinge_neutral.csv"
+]
 
-def process_clustering_final():
+def process_clustering_final_K4():
     all_dfs = []
 
-    for sentiment, files in grupos_datasets.items():
-        temp_dfs = []
-        for f in files:
-            if os.path.exists(f):
-                df_temp = pd.read_csv(f)
-                df_temp['app'] = 'Boo' if 'boo' in f.lower() else 'Hinge'
-                temp_dfs.append(df_temp)
+    for file in datasets:
+        if not os.path.exists(file): continue
         
-        if not temp_dfs: continue
-            
-        # Unificamos apps para entrenar el modelo una sola vez por sentimiento
-        df = pd.concat(temp_dfs).dropna(subset=['text_final'])
+        print(f"Procesando: {file}")
+        df = pd.read_csv(file)
+        
+        # Limpieza de columnas Unnamed y rename de texto
+        df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
+        if 'text_final' in df.columns:
+            df = df.rename(columns={'text_final': 'texto_limpio'})
+        
+        df = df.dropna(subset=['texto_limpio'])
+        
+        sentiment = 'positive' if 'positive' in file else ('negative' if 'negative' in file else 'neutral')
         df['sentimiento_analisis'] = sentiment
-        df['num_palabras'] = df['text_final'].apply(lambda x: len(str(x).split()))
+        df['num_palabras'] = df['texto_limpio'].apply(lambda x: len(str(x).split()))
+        df['Longitud'] = df['num_palabras']
 
-        print(f"\n>>> Entrenando modelos para clase: {sentiment.upper()}")
+        # --- K-MEANS ---
+        vectorizer = TfidfVectorizer(max_features=1000, stop_words='english')
+        X_tfidf = vectorizer.fit_transform(df['texto_limpio'])
+        df['kmeans_cluster'] = KMeans(n_clusters=BEST_K, random_state=42, n_init=10).fit_predict(X_tfidf)
 
-        # --- VALIDACIÓN K-MEANS (Inercia) ---
-        vectorizer = TfidfVectorizer(max_features=1000, stop_words=['app', 'people', 'match'])
-        X_tfidf = vectorizer.fit_transform(df['text_final'])
-        
-        inertia = []
-        for k in range(2, 7):
-            km_temp = KMeans(n_clusters=k, random_state=42, n_init=10)
-            km_temp.fit(X_tfidf)
-            inertia.append(km_temp.inertia_)
-        
-        plt.figure()
-        plt.plot(range(2, 7), inertia, marker='o')
-        plt.title(f"Codo KMeans - {sentiment}")
-        plt.savefig(f"codo_kmeans_{sentiment}.png")
-        plt.close()
-
-        # Ejecución final KMeans
-        km = KMeans(n_clusters=BEST_K, random_state=42, n_init=10)
-        df['kmeans_cluster'] = km.fit_predict(X_tfidf)
-
-        # --- VALIDACIÓN LDA (Coherencia) ---
-        tokens = df['text_final'].apply(lambda x: str(x).split()).tolist()
+        # --- LDA ---
+        tokens = df['texto_limpio'].apply(lambda x: str(x).split()).tolist()
         dictionary = Dictionary(tokens)
         corpus = [dictionary.doc2bow(t) for t in tokens]
-
-        coherencias = []
-        for k in range(2, 6):
-            lda_temp = LdaModel(corpus=corpus, id2word=dictionary, num_topics=k, passes=5, random_state=42)
-            cm = CoherenceModel(model=lda_temp, texts=tokens, dictionary=dictionary, coherence='c_v')
-            coherencias.append(cm.get_coherence())
-        
-        plt.figure()
-        plt.plot(range(2, 6), coherencias, marker='o')
-        plt.title(f"Coherencia LDA - {sentiment}")
-        plt.savefig(f"coherencia_lda_{sentiment}.png")
-        plt.close()
-
-        # Ejecución final LDA
         lda = LdaModel(corpus=corpus, id2word=dictionary, num_topics=BEST_K, passes=10, random_state=42)
-        
-        def get_lda_cluster(text):
+
+        # Probabilidades 
+        def get_lda_probs(text):
             bow = dictionary.doc2bow(str(text).split())
-            return max(lda.get_document_topics(bow), key=lambda x: x[1])[0]
+            topics = dict(lda.get_document_topics(bow, minimum_probability=0))
+            return pd.Series([topics.get(i, 0.0) for i in range(4)])
 
-        df['lda_cluster'] = df['text_final'].apply(get_lda_cluster)
+        lda_res = df['texto_limpio'].apply(get_lda_probs)
+        lda_res.columns = ['Prob_Topico_0', 'Prob_Topico_1', 'Prob_Topico_2', 'Prob_Topico_3']
+        df = pd.concat([df, lda_res], axis=1)
+        df['lda_cluster'] = lda_res.idxmax(axis=1).str.replace('Prob_Topico_', '').astype(int)
 
-        # --- LÓGICA HÍBRIDA Y MAPEO ---
+        # --- LÓGICA HÍBRIDA ---
         def apply_hybrid(row):
             if row['num_palabras'] > UMBRAL_LONGITUD:
-                return row['lda_cluster']
+                return row['lda_cluster'], 'LDA'
             else:
-                return row['kmeans_cluster']
+                return row['kmeans_cluster'], 'K-Means'
 
-        df['Cluster_Dominante'] = df.apply(apply_hybrid, axis=1)
+        df[['Cluster_Dominante', 'Modelo']] = df.apply(lambda x: pd.Series(apply_hybrid(x)), axis=1)
         df['Tema_Nombre'] = df['Cluster_Dominante'].map(NOMBRES_CLUSTERS[sentiment])
-        
-        # Guardamos palabras clave (Top 8)
-        df['Palabras_Clave'] = df['text_final'].apply(lambda x: ", ".join(str(x).split()[:8]))
+        df['Palabras_Clave'] = df['texto_limpio'].apply(lambda x: ", ".join(str(x).split()[:8]))
         
         all_dfs.append(df)
 
     if all_dfs:
-        pd.concat(all_dfs, ignore_index=True).to_csv("AnalisisClustering.csv", index=False)
-        print("\nTODO LISTO: CSV Unificado, Codos y Coherencias guardados.")
+        final_df = pd.concat(all_dfs, ignore_index=True)
+        
+        columnas_finales = [
+            'reviewId', 'content', 'score', 'gender', 'location', 'date', 
+            'sentimiento_analisis', 'texto_limpio', 'num_palabras', 'Cluster_Dominante', 
+            'Tema_Nombre', 'Prob_Topico_0', 'Prob_Topico_1', 'Prob_Topico_2', 'Prob_Topico_3', 
+            'Palabras_Clave', 'Modelo', 'Longitud'
+        ]
+  
+        final_df = final_df[[c for c in columnas_finales if c in final_df.columns]]
+        
+        final_df.to_csv("AnalisisClustering.csv", index=False)
+        print("\nCSV generado")
 
 if __name__ == "__main__":
-    process_clustering_final()
+    process_clustering_final_K4()
