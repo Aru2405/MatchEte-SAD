@@ -23,6 +23,7 @@ def preprocess_text(text):
     text = str(text).lower()
     text = re.sub(f'[{re.escape(string.punctuation)}]', '', text)
     text = re.sub(r'\d+', '', text)
+    text = re.sub(r'\d+\s*stars?', '', text)
     return " ".join(text.split())
 
 def run_training():
@@ -54,7 +55,8 @@ def run_training():
         tfidf = TfidfVectorizer(
             max_features=a['tfidf']['max_features'],
             ngram_range=tuple(a['tfidf']['ngram_range']),
-            stop_words=a['tfidf']['stop_words']
+            stop_words=a['tfidf']['stop_words'],
+            sublinear_tf=True,       # Suaviza el impacto de palabras repetitivas
         )
         
         X_train = tfidf.fit_transform(df_train['clean'])
@@ -70,10 +72,22 @@ def run_training():
             if m_type == 'KNN':
                 model = KNeighborsClassifier(**a['knn'])
             else:
+                # --- LÓGICA DE PESOS DINÁMICOS ---
+                lr_params = a['logistic_regression']
+                # Si no están en el JSON, usamos los pesos del 0.61 por defecto
+                raw_weights = lr_params.get('class_weights', {"0": 1.8, "1": 2.3, "2": 0.5})
+                
+                # Convertir llaves de string a int (el JSON siempre trae strings)
+                if isinstance(raw_weights, dict):
+                    custom_weights = {int(k): v for k, v in raw_weights.items()}
+                else:
+                    custom_weights = raw_weights
+                
                 model = LogisticRegression(
-                    max_iter=a['logistic_regression']['max_iter'],
-                    C=a['logistic_regression']['C'],
-                    solver=a['logistic_regression']['solver']
+                    max_iter=lr_params['max_iter'],
+                    C=lr_params['C'],
+                    solver=lr_params['solver'],
+                    class_weight=custom_weights
                 )
 
             model.fit(X_train, y_train)

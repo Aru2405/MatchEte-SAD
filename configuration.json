@@ -4,19 +4,19 @@
     "train_ia_path": "Dataset_Train_IA.csv",
     "dev_path": "Dataset_Dev.csv",
     "test_path": "Dataset_Test.csv",
-    "model_name": "model.pkl",
-    "vectorizer_name": "vectorizer.pkl",
+    "model_name": "model_SMOTELR0400304387.pkl",
+    "vectorizer_name": "vectorizer_SMOTELR0400304387.pkl",
     "text_column": "content",
     "target_column": "label",
     "industry": "dating app",
-    "balancing_strategy": "IA",
-    "balancing_classes": [0, 1, 2],
+    "balancing_strategy": "SMOTE",
+    "balancing_classes": [0, 1],
     "model_to_run": "LR"
   },
   "algorithm_params": {
     "tfidf": {
-      "max_features": 11000,
-      "ngram_range": [1, 2],
+      "max_features": 7000,
+      "ngram_range": [1, 3],
       "stop_words": null
     },
     "knn": {
@@ -26,8 +26,13 @@
     },
     "logistic_regression": {
       "max_iter": 5000,
-      "C": 1.5,
-      "solver": "lbfgs"
+      "C": 0.5,
+      "solver": "lbfgs",
+      "class_weights": {
+        "0": 1.8,
+        "1": 2.3,
+        "2": 0.5
+      }
     }
   }
 }
